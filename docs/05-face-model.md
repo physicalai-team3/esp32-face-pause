@@ -105,3 +105,25 @@ while (true) {
 |---|---|
 | 점심 전까지 모델이 보드에서 안 돎 | 팀원 2·3은 영향 없음 (stub/sim으로 계속 진행). 팀원 1은 ESP-NN 끄기 → 그래도 안 되면 arduino-esp32 2.0.17의 `CameraWebServer` 예제에 내장된 얼굴 검출(`human_face_detect_msr01/mnp01`)로 교체. `face_result_t`만 같으면 나머지는 그대로다 |
 | 정확도 부족 | `FP_SCORE_THRESHOLD` 조정, `FP_PRESENT_FRAMES`·`FP_ABSENT_MS`로 보정 (팀원 2) |
+
+## 7. 측정 결과 (2026-10-30, 팀원 1)
+
+조건: XIAO ESP32S3 Sense, esp32 코어 2.0.17, OPI PSRAM, Quantized(int8) + EON, ESP-NN 켜짐, `FP_SCORE_THRESHOLD 0.5`
+
+| 측정 | 결과 | 판정 |
+|---|---|---|
+| 추론 시간 (QVGA 320x240 캡처) | `infer` 236~240ms (nn 142ms, dsp 4ms, 나머지는 캡처·JPEG 디코딩) → 약 4.2 FPS | 목표(≥5 FPS) 미달 |
+| 추론 시간 (**QQVGA 160x120 캡처, 최종**) | `infer` 약 190ms → 약 5.3 FPS, 0.5m 검출 유지 | ✅ |
+| 카메라 센서 | PID `0x3660` (OV3660) | vflip 보정 필요 |
+| 부팅 → 첫 결과 | 1446ms | ✅ `FP_SENSOR_TIMEOUT_MS`(3000) 이내 |
+| 정면 0.5m | 검출됨 | ✅ |
+| 정면 1m | 검출 안 됨 | ⚠ 96x96 입력 한계 |
+| 측면 (고개 돌림) | 검출 안 됨 | ✅ 정지 동작과 일치 |
+| 사람 없음 | `faces=0` 유지 | ✅ 오검출 없음 |
+| 두 명 (사진) | `faces=2` | ✅ |
+
+**결정**
+- 데모 거리: **노트북 앞 0.5~0.7m** (일반적인 노트북 시청 거리)
+- 처음에 `faces=0`만 나온 원인: OV3660 센서는 영상이 위아래로 뒤집혀 나온다. 예제와 같이 `set_vflip(1)` 보정을 추가해 해결
+- 얼굴은 화면 **가운데**에 와야 한다. 모델 입력은 캡처 이미지 가운데의 정사각형만 잘라 쓴다 (`EI_CLASSIFIER_RESIZE_FIT_SHORTEST`)
+
