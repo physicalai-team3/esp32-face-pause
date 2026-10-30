@@ -39,9 +39,9 @@ services:
       MQTT_BROKER: broker           # compose 네트워크 안이므로 서비스 이름으로 접속
       MQTT_PORT: "1883"
       DEVICE_ID: ${SIM_DEVICE_ID:-sim-01}
-      SCENARIO: ${SIM_SCENARIO:-cycle}   # cycle | flicker | offline | interactive
+      SCENARIO: ${SIM_SCENARIO:-cycle}   # cycle | flicker | offline | sensor | interactive
       PYTHONUNBUFFERED: "1"
-    stdin_open: true                # interactive 시나리오: docker attach fp-sim 후 p/a/q 입력
+    stdin_open: true                # interactive 시나리오: docker attach fp-sim 후 p/a/e/o/d/r/q 입력
     tty: true
     depends_on:
       broker:

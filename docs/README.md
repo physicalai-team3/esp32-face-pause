@@ -16,6 +16,7 @@
 | [04-team-plan.md](04-team-plan.md) | 3인 역할 분담, 오늘 타임라인, Git 규칙, 통합 체크리스트 | 전원 |
 | [05-face-model.md](05-face-model.md) | Edge Impulse FOMO 얼굴 검출 모델 받기·이식·측정 | 팀원 1 |
 | [06-web-ui.md](06-web-ui.md) | 웹 화면 구성, 링크 입력, 재생 제어 규칙 | 팀원 3 |
+| [07-demo.md](07-demo.md) | 데모 준비 체크리스트, 시연 순서(T1~T7), 막혔을 때 대처, sim으로 대신 시연 | 전원 |
 
 ## 한눈에 보기
 
