@@ -1,0 +1,55 @@
+# esp32-face-pause
+#   기본:              broker(MQTT 우체국) + web(유튜브 플레이어 페이지)
+#   --profile sim:      sim(가짜 ESP32)        — 보드 없이 웹 개발/테스트
+#   --profile firmware: fw(arduino-cli 컴파일) — 펌웨어 컴파일 확인, 단위 테스트
+services:
+  broker:
+    image: eclipse-mosquitto:2
+    container_name: fp-broker
+    ports:
+      - "${MQTT_PORT:-1883}:1883"   # ESP32, sim (TCP)
+      - "${MQTT_WS_PORT:-9001}:9001" # 브라우저 (WebSocket)
+    volumes:
+      - ./services/broker/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+    healthcheck:
+      test: ["CMD", "mosquitto_sub", "-t", "$$SYS/#", "-C", "1", "-W", "3"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: ./services/web
+    container_name: fp-web
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    environment:
+      # 브라우저는 compose 네트워크 밖에 있으므로 서비스 이름(broker)이 아니라 노트북 주소를 쓴다
+      MQTT_WS_URL: ${MQTT_WS_URL:-ws://localhost:9001}
+      DEFAULT_DEVICE_ID: ${DEFAULT_DEVICE_ID:-xiao-01}
+      DEFAULT_VIDEO_ID: ${DEFAULT_VIDEO_ID:-}
+    depends_on:
+      broker:
+        condition: service_healthy
+
+  sim:
+    build: ./services/sim
+    container_name: fp-sim
+    profiles: ["sim"]
+    environment:
+      MQTT_BROKER: broker           # compose 네트워크 안이므로 서비스 이름으로 접속
+      MQTT_PORT: "1883"
+      DEVICE_ID: ${SIM_DEVICE_ID:-sim-01}
+      SCENARIO: ${SIM_SCENARIO:-cycle}   # cycle | flicker | offline | interactive
+      PYTHONUNBUFFERED: "1"
+    stdin_open: true                # interactive 시나리오: docker attach fp-sim 후 p/a/q 입력
+    tty: true
+    depends_on:
+      broker:
+        condition: service_healthy
+
+  fw:
+    build: ./firmware
+    profiles: ["firmware"]
+    volumes:
+      - ./firmware:/firmware
+    command: ["sh", "build.sh"]     # 테스트: docker compose run --rm fw sh test.sh

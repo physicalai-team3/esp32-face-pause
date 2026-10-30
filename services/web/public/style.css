@@ -1,0 +1,83 @@
+:root {
+  --bg: #f7f6f2;
+  --fg: #1d2433;
+  --muted: #8a8f99;
+  --line: #dcdad3;
+  --ok: #2e9d5b;
+  --idle: #8a8f99;
+  --bad: #d64545;
+  --accent: #c8553d;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Malgun Gothic", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--line);
+}
+.topbar h1 { font-size: 18px; margin: 0 auto 0 0; }
+
+.dot::before {
+  content: "●";
+  margin-right: 4px;
+  color: var(--idle);
+}
+.dot[data-state="on"]::before { color: var(--ok); }
+.dot[data-state="error"]::before { color: var(--bad); }
+
+main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.url-form { display: flex; gap: 8px; }
+.url-form input { flex: 1; padding: 10px 12px; font-size: 15px; border: 1px solid var(--line); border-radius: 6px; }
+.url-form button { padding: 10px 16px; border: 0; border-radius: 6px; background: var(--accent); color: #fff; cursor: pointer; }
+.url-error { color: var(--bad); margin: 6px 0 0; }
+
+.recent { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 10px 0; }
+.recent li { padding: 4px 10px; border: 1px solid var(--line); border-radius: 999px; font-size: 13px; cursor: pointer; }
+
+.player-wrap { aspect-ratio: 16 / 9; background: #000; border-radius: 8px; overflow: hidden; }
+.player-wrap iframe, #player { width: 100%; height: 100%; }
+
+.controls { display: flex; align-items: center; justify-content: center; gap: 24px; margin: 16px 0; }
+
+.badge { padding: 6px 14px; border-radius: 999px; color: #fff; background: var(--idle); font-weight: 600; }
+.badge[data-state="present"] { background: var(--ok); }
+.badge[data-state="absent"] { background: var(--idle); }
+.badge[data-state="offline"],
+.badge[data-state="error"] { background: var(--bad); }
+
+.hud {
+  text-align: center;
+  padding: 10px;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 13px;
+  border-top: 1px solid var(--line);
+}
+.hud[data-stale="true"] { color: var(--muted); }
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(29, 36, 51, 0.85);
+  color: #fff;
+}
+.overlay[hidden] { display: none; }
+.overlay button { font-size: 22px; padding: 14px 32px; border: 0; border-radius: 8px; background: var(--accent); color: #fff; cursor: pointer; }

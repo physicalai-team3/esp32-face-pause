@@ -1,0 +1,22 @@
+# 비밀 정보 (Wi-Fi 비밀번호, 환경 변수)
+.env
+firmware/face_pause/config.h
+
+# 빌드 결과물
+firmware/build/
+firmware/test/*.out
+
+# Arduino IDE가 스케치북(firmware/)에 설치하는 라이브러리 — 각자 라이브러리 관리자로 설치
+# (Edge Impulse 라이브러리는 커밋한다: firmware/libraries/README.md 참고)
+firmware/libraries/PubSubClient/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# 편집기 / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

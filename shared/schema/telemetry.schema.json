@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "facepause/telemetry.schema.json",
+  "title": "facepause/<device_id>/telemetry",
+  "description": "디버그/HUD용. 1초마다, retained 아님. 재생 제어에 쓰지 않는다. faces/score는 디바운스 전 원시값.",
+  "type": "object",
+  "required": ["v", "device", "faces", "score", "fps", "infer_ms", "uptime_ms"],
+  "properties": {
+    "v": { "const": 1 },
+    "device": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "faces": { "type": "integer", "minimum": 0 },
+    "score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "fps": { "type": "number", "minimum": 0 },
+    "infer_ms": { "type": "integer", "minimum": 0 },
+    "rssi": { "type": "integer", "description": "Wi-Fi 신호 세기 (dBm)" },
+    "heap_kb": { "type": "integer", "minimum": 0 },
+    "psram_kb": { "type": "integer", "minimum": 0 },
+    "uptime_ms": { "type": "integer", "minimum": 0 }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "facepause/presence.schema.json",
+  "title": "facepause/<device_id>/presence",
+  "description": "디바운스가 끝난 최종 상태. 상태가 바뀔 때만 retained로 발행. 웹은 state만 보고 재생/정지한다.",
+  "type": "object",
+  "required": ["v", "device", "state", "faces", "score", "seq", "uptime_ms"],
+  "properties": {
+    "v": { "const": 1 },
+    "device": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "state": { "enum": ["present", "absent"] },
+    "faces": { "type": "integer", "minimum": 0 },
+    "score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "seq": { "type": "integer", "minimum": 0 },
+    "uptime_ms": { "type": "integer", "minimum": 0 }
+  }
+}

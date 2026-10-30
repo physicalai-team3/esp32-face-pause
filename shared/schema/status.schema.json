@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "facepause/status.schema.json",
+  "title": "facepause/<device_id>/status",
+  "description": "장치 생존 여부. online은 접속 시 ESP32가, offline은 LWT로 브로커가 retained 발행.",
+  "type": "object",
+  "required": ["v", "device", "state"],
+  "properties": {
+    "v": { "const": 1 },
+    "device": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "state": { "enum": ["online", "offline", "error"] },
+    "fw": { "type": "string", "description": "online일 때 펌웨어 버전" },
+    "ip": { "type": "string", "description": "online일 때 ESP32 IP" },
+    "reason": { "enum": ["camera_init", "model_init", "sensor_timeout"], "description": "error일 때 원인" }
+  }
+}

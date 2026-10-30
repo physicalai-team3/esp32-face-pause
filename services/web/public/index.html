@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Face Pause</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- ① 상단 바 -->
+  <header class="topbar">
+    <h1>🎬 Face Pause</h1>
+    <label class="device">
+      장치
+      <select id="device-select"></select>
+    </label>
+    <span class="dot" id="broker-dot" data-state="off">브로커</span>
+    <span class="dot" id="device-dot" data-state="off">장치</span>
+  </header>
+
+  <main>
+    <!-- ② 링크 입력 -->
+    <form class="url-form" id="url-form">
+      <input id="url-input" type="text" placeholder="유튜브 링크를 붙여 넣으세요 (https://www.youtube.com/watch?v=...)" autocomplete="off">
+      <button type="submit">불러오기</button>
+    </form>
+    <p class="url-error" id="url-error" hidden></p>
+
+    <!-- ③ 최근 영상 -->
+    <ul class="recent" id="recent-list"></ul>
+
+    <!-- ④ 플레이어 (YouTube IFrame API 가 이 div 를 iframe 으로 바꾼다) -->
+    <div class="player-wrap">
+      <div id="player"></div>
+    </div>
+
+    <!-- ⑤ 상태 배지 + ⑥ 얼굴 제어 토글 -->
+    <div class="controls">
+      <span class="badge" id="presence-badge" data-state="unknown">연결 대기</span>
+      <label class="toggle">
+        <input type="checkbox" id="face-control" checked>
+        얼굴 제어
+      </label>
+    </div>
+  </main>
+
+  <!-- ⑦ HUD -->
+  <footer class="hud" id="hud" data-stale="true">
+    faces <b id="hud-faces">-</b> ·
+    score <b id="hud-score">-</b> ·
+    fps <b id="hud-fps">-</b> ·
+    추론 <b id="hud-infer">-</b>ms ·
+    Wi-Fi <b id="hud-rssi">-</b>dBm
+  </footer>
+
+  <!-- ⑧ 시작 오버레이 (브라우저 자동 재생 정책 때문에 한 번 클릭 필요) -->
+  <div class="overlay" id="start-overlay">
+    <button id="start-button">▶ 시작하기</button>
+    <p>화면을 보면 재생되고, 자리를 비우면 멈춥니다.</p>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="https://unpkg.com/mqtt@5.10.1/dist/mqtt.min.js"></script>
+  <script src="player.js"></script>
+  <!-- 로드가 끝나면 window.onYouTubeIframeAPIReady() 를 호출한다 (player.js 에 정의) -->
+  <script src="https://www.youtube.com/iframe_api"></script>
+</body>
+</html>
