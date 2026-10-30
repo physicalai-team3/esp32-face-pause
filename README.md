@@ -53,7 +53,7 @@ XIAO ESP32S3 Sense가 카메라로 얼굴을 검출(Edge Impulse FOMO)하고, �
 |---|---|---|---|
 | `broker` | 항상 | MQTT 우체국. ESP32·sim은 1883, 브라우저는 9001(WebSocket) | 팀원 3 |
 | `web` | 항상 | 플레이어 페이지 파일을 브라우저에 전달 (재생·구독은 브라우저가 직접) | 팀원 3 |
-| `sim` | 보드 없이 테스트할 때 | 진짜 보드와 같은 형식으로 present/absent/offline 발행 | 팀원 3 |
+| `sim` | 보드 없이 테스트할 때 | 진짜 보드와 같은 형식으로 present/absent/offline/error 발행 | 팀원 3 |
 | `fw` | 컴파일·테스트할 때만 잠깐 | 팀 전원이 같은 버전으로 컴파일되는지 확인 | 팀원 1·2 |
 
 - ESP32 보드는 컨테이너가 아니다. 보드 안의 두 사람은 **파일**(`face_sensor.*` / `presence_link.*`)로 나누고 큐 하나로 연결한다.
@@ -81,6 +81,9 @@ docker compose up -d --build                     # broker + web
 docker compose --profile sim up -d --build sim   # 가짜 ESP32 (sim-01)
 ```
 브라우저에서 http://localhost:8080 → 장치 `sim-01` 선택 → **시작하기**.
+sim 동작은 `.env`의 `SIM_SCENARIO`로 고른다: `cycle`(5초마다 전환), `flicker`, `offline`(LWT→재접속), `sensor`(센서 오류→복구), `interactive`(키 입력, [07-demo.md §3](docs/07-demo.md#3-막혔을-때)).
+
+데모 당일 준비·순서·비상 대처는 [07-demo.md](docs/07-demo.md).
 
 ### 팀원 1·2 — 펌웨어
 1. `firmware/face_pause/config.example.h`를 `config.h`로 복사하고 Wi-Fi(2.4GHz)와 노트북 IP를 입력한다.
